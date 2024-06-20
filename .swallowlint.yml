@@ -1,0 +1,8 @@
+disabled_rules:
+  - ruleA
+  - ruleB
+
+excluded:
+  - .build/
+  - .vscode/
+
