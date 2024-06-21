@@ -22,7 +22,17 @@ struct SwallowLint: ParsableCommand {
 
     mutating func run() throws {
         config = try readConfig()
-        print(config)
+        let report = XcodeReporter.generateReport([
+            StyleViolation(
+                ruleIdentifier: "ruleA.id",
+                ruleDescription: "this is rule A description.",
+                ruleName: "ruleA",
+                severity: .error,
+                location: Location(file: "hoge.swift", line: 10, character: 20),
+                reason: "this is rule A reason."
+            )
+        ])
+        print(report)
     }
 }
 
