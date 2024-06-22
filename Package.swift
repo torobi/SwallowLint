@@ -18,6 +18,10 @@ let package = Package(
             from: "510.0.0"
         ),
         .package(
+            url: "https://github.com/jpsim/SourceKitten",
+            from: "0.35.0"
+        ),
+        .package(
             url: "https://github.com/jpsim/Yams.git",
             from: "5.0.1"
         ),
@@ -28,8 +32,9 @@ let package = Package(
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Yams", package: "Yams"),
+                .product(name: "SourceKittenFramework", package: "SourceKitten"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
-                .product(name: "SwiftParser", package: "swift-syntax")
+                .product(name: "SwiftParser", package: "swift-syntax"),
             ]
         )
     ]

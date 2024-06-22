@@ -1,6 +1,8 @@
 import Foundation
 import ArgumentParser
 import Yams
+import SwiftParser
+import SwiftSyntax
 
 @main
 struct SwallowLint: ParsableCommand {
@@ -10,6 +12,9 @@ struct SwallowLint: ParsableCommand {
         completion: .file(extensions: ["yml", "yaml"])
     )
     var configPath: String = ".swallowlint.yml"
+
+    @Argument
+    var path: String?
 
     private var config: Config?
 
@@ -22,17 +27,6 @@ struct SwallowLint: ParsableCommand {
 
     mutating func run() throws {
         config = try readConfig()
-        let report = XcodeReporter.generateReport([
-            StyleViolation(
-                ruleIdentifier: "ruleA.id",
-                ruleDescription: "this is rule A description.",
-                ruleName: "ruleA",
-                severity: .error,
-                location: Location(file: "hoge.swift", line: 10, character: 20),
-                reason: "this is rule A reason."
-            )
-        ])
-        print(report)
     }
 }
 
