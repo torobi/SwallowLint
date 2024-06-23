@@ -47,7 +47,36 @@ struct SwallowLint: ParsableCommand {
             }
         }
 
-        print((targetFiles.map { $0.file.path ?? "nil" }).joined(separator: "\n"))
+        let reporter: Reporter.Type = XcodeReporter.self
+
+        targetFiles.forEach { file in
+            let commandVisitor = CommandVisitor(locationConverter: file.locationConverter)
+            commandVisitor.walk(file.syntaxTree)
+            let thisFileDisableRuleIdentifiers = Set(commandVisitor.thisCommands.flatMap { $0.ruleIdentifiers })
+            let nextDisableRulesLines = commandVisitor.nextDisableRulesLines
+
+            for rule in rules {
+                if thisFileDisableRuleIdentifiers.contains(rule.description.identifier) { continue }
+
+                let visitor = rule.makeVisitor(file: file)
+                visitor.walk()
+                let violations: [StyleViolation]
+
+                if let disableLines = nextDisableRulesLines[rule.description.identifier]
+                {
+                    violations = visitor.violations.filter { violation in
+                        guard let violationLine = violation.location.line else { return false }
+                        return disableLines.contains(violationLine)
+                    }
+                } else {
+                    violations = visitor.violations
+                }
+
+                if !violations.isEmpty {
+                    print(reporter.generateReport(violations))
+                }
+            }
+        }
     }
 }
 

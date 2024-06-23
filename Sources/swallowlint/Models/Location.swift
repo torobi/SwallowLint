@@ -36,6 +36,10 @@ struct Location: CustomStringConvertible, Comparable, Codable, Sendable {
         self.character = character
     }
 
+    init(sourceLocation: SourceLocation) {
+        self.init(file: sourceLocation.file, line: sourceLocation.line, character: sourceLocation.column)
+    }
+
     // MARK: Comparable
 
     static func < (lhs: Location, rhs: Location) -> Bool {
