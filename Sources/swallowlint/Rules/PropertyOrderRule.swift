@@ -4,7 +4,7 @@ struct PropertyOrderRule: Rule {
     typealias Visitor = PropertyOrderRuleVisitor
 
     let description = RuleDescription(
-        identifier: "property_order_rule",
+        identifier: "property_order",
         name: "Property Order Rule",
         description: "Need to order properties according to modifiers."
     )
