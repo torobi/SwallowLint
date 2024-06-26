@@ -9,7 +9,7 @@ final class CommandVisitor: SyntaxVisitor {
         var lines: [RuleIdentifier: [Int]] = [:]
         nextCommands.forEach { command in
             command.ruleIdentifiers.forEach{ ruleIdentifier in
-                lines[ruleIdentifier]?.append(command.line)
+                lines[ruleIdentifier, default: []].append(command.line + 1)
             }
         }
 

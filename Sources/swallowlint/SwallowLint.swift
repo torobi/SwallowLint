@@ -62,11 +62,10 @@ struct SwallowLint: ParsableCommand {
                 visitor.walk()
                 let violations: [StyleViolation]
 
-                if let disableLines = nextDisableRulesLines[rule.description.identifier]
-                {
+                if let disableLines = nextDisableRulesLines[rule.description.identifier] {
                     violations = visitor.violations.filter { violation in
                         guard let violationLine = violation.location.line else { return false }
-                        return disableLines.contains(violationLine)
+                        return !disableLines.contains(violationLine)
                     }
                 } else {
                     violations = visitor.violations
