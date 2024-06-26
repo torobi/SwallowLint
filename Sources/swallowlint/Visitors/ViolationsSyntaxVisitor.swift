@@ -35,4 +35,8 @@ class ViolationsSyntaxVisitor: SyntaxVisitor {
     func walk() {
         super.walk(file.syntaxTree)
     }
+
+    func location(node: SyntaxProtocol) -> Location {
+        return Location(sourceLocation: node.startLocation(converter: locationConverter))
+    }
 }

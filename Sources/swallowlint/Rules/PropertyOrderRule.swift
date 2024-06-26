@@ -70,7 +70,8 @@ private extension PropertyOrderRuleVisitor {
                 belowModifierIndex += 1
 
                 if aboveModifier > belowModifier {
-                    let reason = "Properties declared with \"\(belowModifier)\" need to be defined above \"\(aboveModifier)\""
+                    let aboveLine = location(node: aboveProperty.node).line ?? 0
+                    let reason = "Properties declared with \"\(belowModifier)\" need to be defined above \"\(aboveModifier)\"(line: \(aboveLine))"
                     return (false, reason)
                 } else if aboveModifier == belowModifier {
                     continue aboveLoop
