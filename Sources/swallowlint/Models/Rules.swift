@@ -1,3 +1,4 @@
 let rules: [any Rule] = [
-    FinalClassRule()
+    FinalClassRule(),
+    PropertyOrderRule()
 ]
