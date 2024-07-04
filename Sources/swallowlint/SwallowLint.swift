@@ -17,7 +17,7 @@ struct SwallowLint: ParsableCommand {
     var path: String?
 
     static let configuration: CommandConfiguration = .init(
-        commandName: "swallow-lint",
+        commandName: "swallowlint",
         abstract: "simple swift linter.",
         shouldDisplay: true,
         helpNames: [.long, .short]

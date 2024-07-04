@@ -4,9 +4,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "swallow-lint",
+    name: "swallowlint",
     platforms: [
         .macOS(.v13)
+    ],
+    products: [
+        .executable(
+            name: "swallowlint",
+            targets: ["swallowlint"]
+        ),
+        .plugin(
+            name: "SwallowLintBuildToolPlugin",
+            targets: ["SwallowLintBuildToolPlugin"]
+        )
     ],
     dependencies: [
         .package(
@@ -35,6 +45,13 @@ let package = Package(
                 .product(name: "SourceKittenFramework", package: "SourceKitten"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftParser", package: "swift-syntax"),
+            ]
+        ),
+        .plugin(
+            name: "SwallowLintBuildToolPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                "swallowlint"
             ]
         )
     ]
