@@ -16,6 +16,10 @@ let package = Package(
         .plugin(
             name: "SwallowLintBuildToolPlugin",
             targets: ["SwallowLintBuildToolPlugin"]
+        ),
+        .plugin(
+            name: "SwallowLintCommandPlugin",
+            targets: ["SwallowLintCommandPlugin"]
         )
     ],
     dependencies: [
@@ -50,6 +54,19 @@ let package = Package(
         .plugin(
             name: "SwallowLintBuildToolPlugin",
             capability: .buildTool(),
+            dependencies: [
+                "swallowlint"
+            ]
+        ),
+        .plugin(
+            name: "SwallowLintCommandPlugin",
+            capability: .command(
+                intent: .custom(
+                    verb: "swallowlint",
+                    description: "simple swift linter."
+                ),
+                permissions: []
+            ),
             dependencies: [
                 "swallowlint"
             ]
