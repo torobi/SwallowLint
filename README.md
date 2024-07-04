@@ -2,7 +2,19 @@
 
 It is a simple, easily extensible linter for Swift.
 
-## USAGE
+## Installation
+
+### Swift Package Manager
+
+SwallowLint can be used as a command plugin or a build tool plugin.
+
+Add
+
+```
+.package(url: "https://github.com/torobi/SwallowLint", from: "<version>")
+```
+
+## Usage
 
 ```
 OVERVIEW: simple swift linter.
