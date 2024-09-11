@@ -39,6 +39,14 @@ let package = Package(
             url: "https://github.com/jpsim/Yams.git",
             from: "5.0.1"
         ),
+        .package(
+            url: "https://github.com/Quick/Quick.git",
+            from: "7.6.1"
+        ),
+        .package(
+            url: "https://github.com/Quick/Nimble.git",
+            from: "13.3.0"
+        ),
     ],
     targets: [
         .executableTarget(
@@ -49,6 +57,14 @@ let package = Package(
                 .product(name: "SourceKittenFramework", package: "SourceKitten"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftParser", package: "swift-syntax"),
+            ]
+        ),
+        .testTarget(
+            name: "SwallowLintTest",
+            dependencies: [
+                "swallowlint",
+                "Nimble",
+                "Quick"
             ]
         ),
         .plugin(
