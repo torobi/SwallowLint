@@ -3,7 +3,7 @@ import SwiftParser
 import SwiftSyntax
 import SourceKittenFramework
 
-final class SwallowLintFile {
+final class SwallowLintFile: SwallowLintFileProtocol {
     let file: File
     let syntaxTree: SourceFileSyntax
     let locationConverter: SourceLocationConverter

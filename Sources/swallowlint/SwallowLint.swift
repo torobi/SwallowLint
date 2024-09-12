@@ -32,7 +32,7 @@ struct SwallowLint: ParsableCommand {
 
         let excludedPaths = excludedPathsConvertToAbsolutePaths(excludedPaths: config.excluded ?? [])
 
-        let targetFiles: [SwallowLintFile]
+        let targetFiles: [SwallowLintFileProtocol]
         if fileManager.isDirectory(url) {
             if excludedPaths.contains(url.path()) {
                 targetFiles = []
@@ -52,17 +52,15 @@ struct SwallowLint: ParsableCommand {
         targetFiles.forEach { file in
             let commandVisitor = CommandVisitor(locationConverter: file.locationConverter)
             commandVisitor.walk(file.syntaxTree)
-            let thisFileDisableRuleIdentifiers = Set(commandVisitor.thisCommands.flatMap { $0.ruleIdentifiers })
-            let nextDisableRulesLines = commandVisitor.nextDisableRulesLines
 
             for rule in rules {
-                if thisFileDisableRuleIdentifiers.contains(rule.description.identifier) { continue }
+                if commandVisitor.thisFileDisableRuleIdentifiers.contains(rule.description.identifier) { continue }
 
                 let visitor = rule.makeVisitor(file: file)
                 visitor.walk()
                 let violations: [StyleViolation]
 
-                if let disableLines = nextDisableRulesLines[rule.description.identifier] {
+                if let disableLines = commandVisitor.nextDisableRulesLines[rule.description.identifier] {
                     violations = visitor.violations.filter { violation in
                         guard let violationLine = violation.location.line else { return false }
                         return !disableLines.contains(violationLine)
@@ -85,14 +83,14 @@ private extension SwallowLint {
         return excludedPaths.map { URL(filePath: $0).absoluteURL.path() }
     }
 
-    func getTargetFiles(directory url: URL, excluded: [String]) throws -> [SwallowLintFile] {
+    func getTargetFiles(directory url: URL, excluded: [String]) throws -> [SwallowLintFileProtocol] {
         let fileManager: FileManager = .default
         let contents = try fileManager.contentsOfDirectory(
             at: url,
             includingPropertiesForKeys: nil
         )
 
-        var files: [SwallowLintFile] = []
+        var files: [SwallowLintFileProtocol] = []
 
         for content in contents {
             if fileManager.isDirectory(content) {
@@ -108,7 +106,7 @@ private extension SwallowLint {
         return files
     }
 
-    func getTargetFile(file url: URL, excluded: [String]) -> SwallowLintFile? {
+    func getTargetFile(file url: URL, excluded: [String]) -> SwallowLintFileProtocol? {
         if excluded.contains(url.absoluteURL.path()) { return nil }
         return SwallowLintFile(url: url)
     }

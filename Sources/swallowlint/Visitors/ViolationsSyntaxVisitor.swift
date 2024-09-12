@@ -2,11 +2,11 @@ import SwiftSyntax
 
 class ViolationsSyntaxVisitor: SyntaxVisitor {
     let ruleDescription: RuleDescription
-    private let file: SwallowLintFile
+    private let file: SwallowLintFileProtocol
     private lazy var locationConverter = file.locationConverter
     private(set) var violations: [StyleViolation] = []
 
-    required init(ruleDescription: RuleDescription, file: SwallowLintFile) {
+    required init(ruleDescription: RuleDescription, file: SwallowLintFileProtocol) {
         self.ruleDescription = ruleDescription
         self.file = file
         super.init(viewMode: .all)

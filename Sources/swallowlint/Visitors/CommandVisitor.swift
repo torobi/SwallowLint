@@ -15,8 +15,10 @@ final class CommandVisitor: SyntaxVisitor {
 
         return lines
     }
-    var thisCommands: [Command] {
-        commands.filter { $0.modifier == .this && $0.isValid }
+    var thisFileDisableRuleIdentifiers: Set<RuleIdentifier> {
+        let identifiers = commands.filter { $0.modifier == .thisFile && $0.isValid }
+                                  .flatMap { $0.ruleIdentifiers }
+        return Set(identifiers)
     }
 
     let locationConverter: SourceLocationConverter

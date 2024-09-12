@@ -20,6 +20,8 @@ struct Command: Equatable {
         case previous
         /// The command should only apply to the same line as its definition.
         case this
+        /// The command should only apply to the file as its definition.
+        case thisFile
         /// The command should only apply to the line following its definition.
         case next
         /// The modifier string was invalid.
