@@ -54,21 +54,9 @@ struct SwallowLint: ParsableCommand {
             commandVisitor.walk(file.syntaxTree)
 
             for rule in rules {
-                if commandVisitor.thisFileDisableRuleIdentifiers.contains(rule.description.identifier) { continue }
-
                 let visitor = rule.makeVisitor(file: file)
                 visitor.walk()
-                let violations: [StyleViolation]
-
-                if let disableLines = commandVisitor.nextDisableRulesLines[rule.description.identifier] {
-                    violations = visitor.violations.filter { violation in
-                        guard let violationLine = violation.location.line else { return false }
-                        return !disableLines.contains(violationLine)
-                    }
-                } else {
-                    violations = visitor.violations
-                }
-
+                let violations = visitor.violations.filter { commandVisitor.isValidViolation(violation: $0) }
                 if !violations.isEmpty {
                     print(reporter.generateReport(violations))
                 }

@@ -7,7 +7,7 @@ struct Command: Equatable {
     /// The action (verb) that SwallowLint should perform when interpreting this command.
     enum Action: String {
         /// The rule(s) associated with this command should be enabled by the SwallowLint engine.
-        // case enable
+        case enable
         /// The rule(s) associated with this command should be disabled by the SwallowLint engine.
         case disable
         /// The action string was invalid.
@@ -20,8 +20,6 @@ struct Command: Equatable {
         case previous
         /// The command should only apply to the same line as its definition.
         case this
-        /// The command should only apply to the file as its definition.
-        case thisFile
         /// The command should only apply to the line following its definition.
         case next
         /// The modifier string was invalid.
