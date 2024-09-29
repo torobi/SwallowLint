@@ -123,7 +123,7 @@ private extension PropertyOrderRuleVisitor {
     }
 }
 
-private extension PropertyOrderRuleVisitor {
+extension PropertyOrderRuleVisitor {
     enum Modifier: String, CaseIterable, Comparable {
         case `static`
 
