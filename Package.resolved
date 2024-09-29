@@ -1,5 +1,5 @@
 {
-  "originHash" : "913aa673730b77d0d751d7ad443495a52e9b6e8b918414bf460c710a38598781",
+  "originHash" : "d735176f4bd8b9d6b08b7cca92ef91f6d60fea75bda8cc0cb4f4c6627b611558",
   "pins" : [
     {
       "identity" : "cwlcatchexception",
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jpsim/Yams.git",
       "state" : {
-        "revision" : "9234124cff5e22e178988c18d8b95a8ae8007f76",
-        "version" : "5.1.2"
+        "revision" : "3036ba9d69cf1fd04d433527bc339dc0dc75433d",
+        "version" : "5.1.3"
       }
     }
   ],
