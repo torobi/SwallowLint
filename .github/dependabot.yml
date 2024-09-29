@@ -1,0 +1,7 @@
+version: 2
+updates:
+  - package-ecosystem: "swift"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "daily"
