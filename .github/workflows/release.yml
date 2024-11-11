@@ -8,12 +8,14 @@ on:
 jobs:
   publish-binary:
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
         run: |
-          swift build -c release --arch arm64 --target swallowlint
+          swift build -c release --arch arm64 --product swallowlint
           tar -czf swallowlint.tar.gz .build/release/swallowlint
       - name: Release Binary
         uses: softprops/action-gh-release@v1
