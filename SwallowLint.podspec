@@ -8,4 +8,3 @@ Pod::Spec.new do |s|
   s.source                    = { http: "#{s.homepage}/releases/download/#{s.version}/swallowlint.tar.gz" }
   s.preserve_paths            = '*'
   s.exclude_files             = '**/file.zip'
-end
