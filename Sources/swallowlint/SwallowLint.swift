@@ -49,19 +49,7 @@ struct SwallowLint: ParsableCommand {
 
         let reporter: Reporter.Type = XcodeReporter.self
 
-        targetFiles.forEach { file in
-            let commandVisitor = CommandVisitor(locationConverter: file.locationConverter)
-            commandVisitor.walk(file.syntaxTree)
-
-            for rule in rules {
-                let visitor = rule.makeVisitor(file: file)
-                visitor.walk()
-                let violations = visitor.violations.filter { commandVisitor.isValidViolation(violation: $0) }
-                if !violations.isEmpty {
-                    print(reporter.generateReport(violations))
-                }
-            }
-        }
+        lint(files: targetFiles, reporter: reporter)
     }
 }
 
@@ -102,12 +90,22 @@ private extension SwallowLint {
 
 // MARK: - Lint
 private extension SwallowLint {
-    func lint(files: [SwallowLintFile]) {
-
+    func lint(files: [SwallowLintFileProtocol], reporter: Reporter.Type) {
+        files.forEach { lint(file: $0, reporter: reporter) }
     }
 
-    func lint(file: SwallowLintFile) {
+    func lint(file: SwallowLintFileProtocol, reporter: Reporter.Type) {
+        let commandVisitor = CommandVisitor(locationConverter: file.locationConverter)
+        commandVisitor.walk(file.syntaxTree)
 
+        for rule in rules {
+            guard let visitor = rule.makeVisitor(configPath: configPath, file: file) as? ViolationsSyntaxVisitorProtocol else { continue }
+            visitor.walk()
+            let violations = visitor.violations.filter { commandVisitor.isValidViolation(violation: $0) }
+            if !violations.isEmpty {
+                print(reporter.generateReport(violations))
+            }
+        }
     }
 }
 

@@ -103,7 +103,7 @@ final class PropertyOrderRuleTest: QuickSpec {
                     }
                     """)
                     let rule = PropertyOrderRule()
-                    let visitor = rule.makeVisitor(file: file)
+                    let visitor = rule.makeVisitor(configPath: "", file: file)
                     visitor.walk()
                     expect(visitor.violations.isEmpty) == true
                 }
@@ -116,7 +116,7 @@ final class PropertyOrderRuleTest: QuickSpec {
                     }
                     """)
                     let rule = PropertyOrderRule()
-                    let visitor = rule.makeVisitor(file: file)
+                    let visitor = rule.makeVisitor(configPath: "", file: file)
                     visitor.walk()
                     expect(visitor.violations.map { Violation.make($0) }) == [
                         Violation.make(violationLine: 4, below: .static, above: .public, aboveLine: 2),
@@ -135,7 +135,7 @@ final class PropertyOrderRuleTest: QuickSpec {
                     }
                     """)
                     let rule = PropertyOrderRule()
-                    let visitor = rule.makeVisitor(file: file)
+                    let visitor = rule.makeVisitor(configPath: "", file: file)
                     visitor.walk()
                     expect(visitor.violations.map { Violation.make($0) }) == [
                         Violation.make(violationLine: 3, below: .fileprivate, above: .private, aboveLine: 2),
@@ -165,11 +165,47 @@ final class PropertyOrderRuleTest: QuickSpec {
                     }
                     """)
                     let rule = PropertyOrderRule()
-                    let visitor = rule.makeVisitor(file: file)
+                    let visitor = rule.makeVisitor(configPath: "", file: file)
                     visitor.walk()
                     expect(visitor.violations.map { Violation.make($0) }) == [
                         Violation.make(violationLine: 3, below: .let, above: .var, aboveLine: 2),
                     ]
+                }
+                context("Separeted by MARK") {
+                    it("Incorrect order by let/ver") {
+                        let file = MockSwallowLintFile(source: """
+                        class Target {
+                            // MARK: - Separator1
+                            var var1_1: Int
+                            let let1_1: Int
+                            var var1_2: Int
+                            // MARK: Separator2
+                            var var2_1: Int
+                            let let2_1: Int
+                            // MARK: IgnroredSeparetor
+                            var var2_2: Int
+                            // MARK: - Separator3
+                            // MARK: Separator4
+                            let let3_1: Int
+                            let let3_2: Int
+                            let let3_3: Int
+                        }
+                        """)
+                        let rule = PropertyOrderRule()
+                        let config = PropertyOrderRuleConfig(rule_configs: .init(property_order: .init(separator_marks: [
+                            "Separator1",
+                            "Separator2",
+                            "Separator3",
+                            "Separator4",
+                            "Separator5"
+                        ])))
+                        let visitor = rule.makeVisitor(config: config, file: file)
+                        visitor.walk()
+                        expect(visitor.violations.map { Violation.make($0) }) == [
+                            Violation.make(violationLine: 4, below: .let, above: .var, aboveLine: 3),
+                            Violation.make(violationLine: 8, below: .let, above: .var, aboveLine: 7)
+                        ]
+                    }
                 }
                 context("extension") {
                     it("No violations") {
@@ -261,7 +297,7 @@ final class PropertyOrderRuleTest: QuickSpec {
                         }
                         """)
                         let rule = PropertyOrderRule()
-                        let visitor = rule.makeVisitor(file: file)
+                        let visitor = rule.makeVisitor(configPath: "", file: file)
                         visitor.walk()
                         expect(visitor.violations.isEmpty) == true
                     }
@@ -357,7 +393,7 @@ final class PropertyOrderRuleTest: QuickSpec {
                     }
                     """)
                     let rule = PropertyOrderRule()
-                    let visitor = rule.makeVisitor(file: file)
+                    let visitor = rule.makeVisitor(configPath: "", file: file)
                     visitor.walk()
                     expect(visitor.violations.isEmpty) == true
                 }
@@ -452,7 +488,7 @@ final class PropertyOrderRuleTest: QuickSpec {
                     }
                     """)
                     let rule = PropertyOrderRule()
-                    let visitor = rule.makeVisitor(file: file)
+                    let visitor = rule.makeVisitor(configPath: "", file: file)
                     visitor.walk()
                     expect(visitor.violations.isEmpty) == true
                 }

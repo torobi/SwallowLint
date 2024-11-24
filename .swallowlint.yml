@@ -1,8 +1,14 @@
 disabled_rules:
   - ruleA
   - ruleB
+  - ruleC
 
 excluded:
   - .build/
   - .vscode/
 
+rule_configs:
+  property_order:
+    separator_marks:
+      - Outputs
+      - Inputs

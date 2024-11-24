@@ -1,6 +1,7 @@
 import SwiftSyntax
 
 struct PropertyOrderRule: Rule {
+    typealias Config = PropertyOrderRuleConfig
     typealias Visitor = PropertyOrderRuleVisitor
 
     let description = RuleDescription(
@@ -10,42 +11,46 @@ struct PropertyOrderRule: Rule {
     )
 }
 
-final class PropertyOrderRuleVisitor: ViolationsSyntaxVisitor {
+final class PropertyOrderRuleVisitor: ViolationsSyntaxVisitor<PropertyOrderRuleConfig> {
     override func visitPost(_ node: MemberBlockSyntax) {
         allCheck(node)
     }
 
     /// 各プロパティの前後のみをチェック
     func quickCheck(_ node: MemberBlockSyntax) {
-        var properties = getProperties(rootNode: node)
+        let propertiesSeparatedMark = getProperties(rootNode: node)
 
-        if properties.isEmpty { return }
+        for properties in propertiesSeparatedMark {
+            guard var previous = properties.first else { continue }
 
-        var previous = properties.removeFirst()
+            let properties = properties.dropFirst()
 
-        for property in properties {
-            let (isCorrectOrder, reason) = checkCorrectOrder(aboveProperty: previous, belowProperty: property)
-            if !isCorrectOrder {
-                addViolation(node: property.node, reason: reason)
+            for property in properties {
+                let (isCorrectOrder, reason) = checkCorrectOrder(aboveProperty: previous, belowProperty: property)
+                if !isCorrectOrder {
+                    addViolation(node: property.node, reason: reason)
+                }
+
+                previous = property
             }
-
-            previous = property
         }
     }
 
     /// 各プロパティ毎にそれより下に定義されている全プロパティをチェック
     func allCheck(_ node: MemberBlockSyntax) {
-        let properties = getProperties(rootNode: node)
+        let propertiesSeparatedMark = getProperties(rootNode: node)
 
-        if properties.isEmpty { return }
+        for properties in propertiesSeparatedMark {
+            if properties.isEmpty { continue }
 
-        for abovePropertyIndex in 0..<properties.count {
-            let aboveProperty = properties[abovePropertyIndex]
-            for belowPropertyIndex in abovePropertyIndex..<properties.count {
-                let belowProperty = properties[belowPropertyIndex]
-                let (isCorrectOrder, reason) = checkCorrectOrder(aboveProperty: aboveProperty, belowProperty: belowProperty)
-                if !isCorrectOrder {
-                    addViolation(node: belowProperty.node, reason: reason)
+            for abovePropertyIndex in 0..<properties.count {
+                let aboveProperty = properties[abovePropertyIndex]
+                for belowPropertyIndex in abovePropertyIndex..<properties.count {
+                    let belowProperty = properties[belowPropertyIndex]
+                    let (isCorrectOrder, reason) = checkCorrectOrder(aboveProperty: aboveProperty, belowProperty: belowProperty)
+                    if !isCorrectOrder {
+                        addViolation(node: belowProperty.node, reason: reason)
+                    }
                 }
             }
         }
@@ -53,14 +58,26 @@ final class PropertyOrderRuleVisitor: ViolationsSyntaxVisitor {
 }
 
 private extension PropertyOrderRuleVisitor {
-    func getProperties(rootNode: MemberBlockSyntax) -> [Property] {
-        return rootNode.members.compactMap {
+    func getProperties(rootNode: MemberBlockSyntax) -> [[Property]] {
+        var properties: [[Property]] = [[]]
+        var currentMark: String? = nil
+        rootNode.members.forEach {
             if let decl = $0.decl.as(VariableDeclSyntax.self) {
-                return Property(decl: decl)
-            } else {
-                return nil
+                for triviaPiece in decl.leadingTrivia.pieces {
+                    guard case let .lineComment(comment) = triviaPiece,
+                          let mark = comment.mark,
+                          mark != currentMark,
+                          let separatorMarksConfig = config?.rule_configs?.property_order?.separator_marks,
+                          separatorMarksConfig.contains(mark)
+                    else { continue }
+
+                    currentMark = comment.mark
+                    properties.append([])
+                }
+                properties[properties.endIndex - 1].append(Property(decl: decl))
             }
         }
+        return properties
     }
 
     func checkCorrectOrder(aboveProperty: Property, belowProperty: Property) -> (Bool, String?) {

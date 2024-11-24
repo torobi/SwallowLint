@@ -1,12 +1,19 @@
 import SwiftSyntax
 
-class ViolationsSyntaxVisitor: SyntaxVisitor {
+protocol ViolationsSyntaxVisitorProtocol {
+    var violations: [StyleViolation] { get }
+    func walk()
+}
+
+class ViolationsSyntaxVisitor<Config>: SyntaxVisitor, ViolationsSyntaxVisitorProtocol {
+    let config: Config?
     let ruleDescription: RuleDescription
     private let file: SwallowLintFileProtocol
     private lazy var locationConverter = file.locationConverter
     private(set) var violations: [StyleViolation] = []
 
-    required init(ruleDescription: RuleDescription, file: SwallowLintFileProtocol) {
+    required init(config: Config?, ruleDescription: RuleDescription, file: SwallowLintFileProtocol) {
+        self.config = config
         self.ruleDescription = ruleDescription
         self.file = file
         super.init(viewMode: .all)
