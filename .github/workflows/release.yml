@@ -15,12 +15,12 @@ jobs:
         uses: actions/checkout@v4
       - name: Build
         run: |
-          swift build -c release --arch arm64 --product swallowlint¥
-          mkdir -p "$(TEMPORARY_FOLDER)"
-          cp -f ".build/release/swallowlint" "$(TEMPORARY_FOLDER)/swallow-lint"
-          cp -f "LICENSE" "$(TEMPORARY_FOLDER)"
-          (cd $(TEMPORARY_FOLDER); zip -r - LICENSE swallow-lint) > "./portable_swallowlint.zip"
-          rm -r "$(TEMPORARY_FOLDER)"
+          swift build -c release --arch arm64 --product swallowlint
+          mkdir -p "${TEMPORARY_FOLDER}"
+          cp -f ".build/release/swallowlint" "${TEMPORARY_FOLDER}/swallow-lint"
+          cp -f "LICENSE" "${TEMPORARY_FOLDER}"
+          (cd ${TEMPORARY_FOLDER}; zip -r - LICENSE swallow-lint) > "./portable_swallowlint.zip"
+          rm -r "${TEMPORARY_FOLDER}"
         env:
           TEMPORARY_FOLDER: ./tmp_swallowlint
       - name: Release Binary
