@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.authors                   = { 'torobi' => '' }
   s.license                   = { type: 'MIT', file: 'LICENSE' }
   s.source                    = { http: "#{s.homepage}/releases/download/#{s.version}/portable_swallowlint.zip" }
-  s.preserve_paths            = '*'
+  s.preserve_paths            = "#{s.homepage}/releases/download/#{s.version}/portable_swallowlint.zip"
   s.exclude_files             = '**/file.zip'
   s.ios.deployment_target     = '11.0'
   s.macos.deployment_target   = '10.13'
