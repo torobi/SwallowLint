@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jpsim/SourceKitten",
       "state" : {
-        "revision" : "fbd6bbcddffa97dca4b8a6b5d5a8246a430be9c7",
-        "version" : "0.36.0"
+        "revision" : "eb6656ed26bdef967ad8d07c27e2eab34dc582f2",
+        "version" : "0.37.0"
       }
     },
     {
