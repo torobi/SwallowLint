@@ -25,27 +25,27 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
-            from: "1.4.0"
+            from: "1.6.1"
         ),
         .package(
             url: "https://github.com/apple/swift-syntax.git",
-            from: "600.0.1"
+            from: "601.0.1"
         ),
         .package(
             url: "https://github.com/jpsim/SourceKitten",
-            from: "0.35.0"
+            from: "0.37.2"
         ),
         .package(
             url: "https://github.com/jpsim/Yams.git",
-            from: "5.0.1"
+            from: "6.0.1"
         ),
         .package(
             url: "https://github.com/Quick/Quick.git",
-            from: "7.6.1"
+            from: "7.6.2"
         ),
         .package(
             url: "https://github.com/Quick/Nimble.git",
-            from: "13.3.0"
+            from: "13.7.1"
         ),
     ],
     targets: [
