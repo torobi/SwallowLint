@@ -29,7 +29,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/apple/swift-syntax.git",
-            from: "601.0.1"
+            from: "602.0.0"
         ),
         .package(
             url: "https://github.com/jpsim/SourceKitten",
